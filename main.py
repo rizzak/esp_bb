@@ -1,0 +1,1 @@
+import ubinasciiimport machinefrom temperature_client import TemperatureClientclient_id = ubinascii.hexlify(machine.unique_id())tc = TemperatureClient(client_id, '93.80.147.216', 5, topic='esp/temp')tc.start(60)
