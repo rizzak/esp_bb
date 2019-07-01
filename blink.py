@@ -6,9 +6,15 @@ class Blink:
     """For blinking led"""
     def __init__(self, pin):
         self.led = machine.Pin(pin, machine.Pin.OUT)
+        self.led.on()
 
     def blink(self, count, interval):
-        for i in count:
+        """
+            Помигать светодиодом
+            count: Количество раз
+            interval: Интервал в секундах
+        """
+        for i in range(count):
             # Зажигаю светодиод
             self.led.off()
             time.sleep(interval)
