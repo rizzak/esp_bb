@@ -1,7 +1,8 @@
 # esp_bb
 esp micropython home automation module
 
-Формат networks.json
+Формат networks.json для перечисления ваших WIFI сетей:
+```python
 {
     "known_networks": [
         {
@@ -14,3 +15,4 @@ esp micropython home automation module
         }
     ]
 }
+```
