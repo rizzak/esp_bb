@@ -1,6 +1,4 @@
 import network
-import machine
-import time
 import json
 
 
@@ -29,16 +27,13 @@ class Connect:
         available_networks.sort(key=lambda station: station["strength"], reverse=True)
 
         if not sta_if.isconnected():
+            led16.blink(2, 0.2)
             for config in my_networks['known_networks']:
                 for ssid in available_networks:
                     if config["ssid"] == ssid["ssid"]:
                         print('connecting to network {0} ...'.format(config["ssid"]))
                         sta_if.active(True)
                         sta_if.connect(config["ssid"], config["password"])
-
-        while not sta_if.isconnected():
-            led16.blink(2, 0.2)
-            pass
 
         print('network config:', sta_if.ifconfig())
         led2.blink(1, 0.2)
