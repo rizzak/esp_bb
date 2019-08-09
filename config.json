@@ -1,0 +1,13 @@
+{
+    "known_networks": [
+        {
+            "ssid": "Virus",
+            "password": "4ilivili"
+        },
+        {
+            "ssid": "Netstream",
+            "password": "BEEFDEADBEEFDEAD"
+        }
+    ],
+    "broker_ip": "128.72.148.24"
+}

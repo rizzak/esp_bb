@@ -1,3 +1,4 @@
+import time
 import network
 import json
 
@@ -11,7 +12,7 @@ class Connect:
     @staticmethod
     def connect():
         """Connect to internet"""
-        my_networks = json.loads(open('networks.json').read())
+        my_networks = json.loads(open('config.json').read())
         led16 = Blink(16)
         led2 = Blink(2)
         sta_if = network.WLAN(network.STA_IF)
@@ -34,6 +35,6 @@ class Connect:
                         print('connecting to network {0} ...'.format(config["ssid"]))
                         sta_if.active(True)
                         sta_if.connect(config["ssid"], config["password"])
-
+        time.sleep(3)
         print('network config:', sta_if.ifconfig())
-        led2.blink(1, 0.2)
+        led2.blink(5, 0.03)
