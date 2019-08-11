@@ -1,0 +1,1 @@
+from machine import Pinimport dhtclass TemperatureSensor:    """    Represents a Temperature sensor    """    def __init__(self, pin):        self.sensor = dht.DHT11(Pin(pin))    def read_temp_and_hum(self):        self.sensor.measure()        temp = self.sensor.temperature()        hum = self.sensor.humidity()        return [temp, hum]
