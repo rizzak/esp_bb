@@ -1,1 +1,1 @@
-from connect import Connectfrom helpers import Helperstry:    Helpers.free_space()    Connect.connect()except:    pass
+import webreplfrom connect import Connectfrom helpers import Helperswebrepl.start()try:    Helpers.free_space()    Connect.connect()except:    pass
