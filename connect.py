@@ -17,6 +17,8 @@ class Connect:
         led2 = Blink(2)
         sta_if = network.WLAN(network.STA_IF)
 
+        sta_if.active(True)
+
         # scan what’s available
         available_networks = []
         for net in sta_if.scan():
@@ -38,3 +40,4 @@ class Connect:
         time.sleep(3)
         print('network config:', sta_if.ifconfig())
         led2.blink(5, 0.03)
+        time.sleep(3)
