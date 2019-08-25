@@ -41,3 +41,12 @@ class Connect:
         print('network config:', sta_if.ifconfig())
         led2.blink(5, 0.03)
         time.sleep(3)
+
+    @staticmethod
+    def check_and_reconnect():
+        if network.WLAN(network.STA_IF).ifconfig()[0] == '0.0.0.0':
+            try:
+                Connect.connect()
+                print('IP is: ' + network.WLAN(network.STA_IF).ifconfig()[0])
+            except:
+                pass
