@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head> <title>RC Car </title> </head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+    html { 
+    background-color: #281f55;
+    font-family: Roboto,Arial,Helvetica,Helvetica Neue,FreeSans,sans-serif;
+    display: inline-block; 
+    margin: 0px auto; 
+    text-align: center;
+    }
+    .button:active {
+    background-color: #d9063e;
+    border-color: #d9063e;
+    }
+    .button { 
+    -webkit-user-select: none; 
+    -moz-user-select: none; 
+    -ms-user-select: none; 
+    user-select: none; 
+    background-color: #f8104d;
+    border-radius: 3px;
+    border-color: #f8104d;
+    color: white; 
+    padding: 12px 28px; 
+    text-decoration: none; 
+    font-size: 26px; 
+    margin: 1px; 
+    cursor: pointer;
+    }
+</style>
+
+</head>
+  <body onmouseup="clearMove()" ontouchend="clearMove()">
+    <button class="button" onmousedown="moveForward()" id="forward">FORWARD</button></p>
+    <div style="clear: both;">
+    <p>
+    <button class="button" onmousedown="moveLeft()" ontouchstart="moveLeft()" id="left">LEFT </button>
+    <button class="button" onmousedown="moveBack()" ontouchstart="moveBack()" id="back">BACK</button>
+    <button class="button" onmousedown="moveRight()" ontouchstart="moveRight()" id="right">RIGHT</button>
+    </p>
+    <button onmousedown="repl()" ontouchstart="repl()" id="Repl">Repl</button>
+    </div>
+
+    <script>
+    var d = "";
+    
+    function throttle(func, wait = 100) {
+      let timer = null;
+      return function(...args) {
+        if (timer === null) {
+          timer = setTimeout(() => {
+            func.apply(this, args);
+            timer = null;
+          }, wait);
+        }
+      };
+    }
+    
+    var myFunction = throttle(baseMyFunction, 50);
+
+    function moveForward(){d = "forward"; myFunction()}
+    function moveBack(){d = "back"; myFunction()}
+    function moveLeft(){d = "left"; myFunction()}
+    function moveRight(){d = "right"; myFunction()}
+    function repl(){d = "repl"; myFunction()}
+
+    function clearMove(){
+        d = "";
+        console.log('stop');
+        var xmlhttp=new XMLHttpRequest();
+        xmlhttp.open("POST","Val=stopX",true);
+        xmlhttp.send();
+        }
+
+    function baseMyFunction(){
+        if (d) {
+            console.log(d);
+            var xmlhttp=new XMLHttpRequest();
+            xmlhttp.open("POST","Val="+d+"X",true);
+            xmlhttp.send();
+            }
+        }
+        
+    document.addEventListener('keydown', function(event) {
+        switch(event.code) {
+            case 'ArrowUp':
+                moveForward();
+                break;
+            case 'ArrowDown':
+                moveBack();
+                break;
+            case 'ArrowLeft':
+                moveLeft();
+                break;
+            case 'ArrowRight':
+                moveRight();
+                break;
+        }
+    });
+    
+    document.addEventListener('keyup', function(event) {
+        if (event.code == 'ArrowUp' || event.code == 'ArrowDown' || event.code == 'ArrowLeft' || event.code == 'ArrowRight') {
+            clearMove()
+        }
+    });
+    
+
+    </script>
+  </body>
+</html>

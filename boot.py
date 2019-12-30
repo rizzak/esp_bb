@@ -1,1 +1,1 @@
-import espimport webreplfrom connect import Connectfrom helpers import Helpersesp.osdebug(None)webrepl.start()try:    Helpers.free_space()    Connect.connect()except:    pass
+import espimport webreplfrom connect import Connectfrom helpers import Helpersesp.osdebug(None)webrepl.start()try:    print(Helpers.free_space())    Connect.connect()except:    pass

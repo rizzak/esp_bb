@@ -6,7 +6,7 @@ class Blink:
     """For blinking led"""
     def __init__(self, pin):
         self.led = machine.Pin(pin, machine.Pin.OUT)
-        self.led.on()
+        self.led.off()
 
     def blink(self, count, interval):
         """
@@ -16,8 +16,8 @@ class Blink:
         """
         for i in range(count):
             # Зажигаю светодиод
-            self.led.off()
+            self.led.on()
             time.sleep(interval)
             # Гашу светодиод
-            self.led.on()
+            self.led.off()
             time.sleep(interval)

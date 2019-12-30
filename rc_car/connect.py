@@ -7,13 +7,13 @@ from blink import Blink
 
 
 class Connect:
-    """For connect to internet"""
+    """For connect to wi-fi"""
 
     @staticmethod
     def connect():
-        """Connect to internet"""
+        print("Connect to wi-fi")
         my_networks = json.loads(open('config.json').read())
-        led16 = Blink(16)
+        led16 = Blink(2)
         led2 = Blink(2)
         sta_if = network.WLAN(network.STA_IF)
         ap_if = network.WLAN(network.AP_IF)
