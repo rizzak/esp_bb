@@ -12,11 +12,20 @@ class Motor():
         self.right_backward = PWM(Pin(pin_right_backward, Pin.OUT), frequency)
         self.default_speed = 512
 
-    def move(self, left_forward=222, right_forward=222, left_backward=0, right_backward=0):
-        self.left_forward.duty(left_forward)
-        self.right_forward.duty(right_forward)
-        self.left_backward.duty(left_backward)
-        self.right_backward.duty(right_backward)
+    def move(self, left=500, right=500):
+        if left > 0:
+            self.left_backward.duty(0)
+            self.left_forward.duty(left)
+        else:
+            self.left_backward.duty(-left)
+            self.left_forward.duty(0)
+
+        if right > 0:
+            self.right_backward.duty(0)
+            self.right_forward.duty(right)
+        else:
+            self.right_backward.duty(-right)
+            self.right_forward.duty(0)
 
     def forward(self, left=500, right=500):
         self.left_backward.duty(0)

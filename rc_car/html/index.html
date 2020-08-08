@@ -1,112 +1,191 @@
 <!DOCTYPE html>
 <html>
-<head> <title>RC Car </title> </head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-    html { 
-    background-color: #281f55;
-    font-family: Roboto,Arial,Helvetica,Helvetica Neue,FreeSans,sans-serif;
-    display: inline-block; 
-    margin: 0px auto; 
-    text-align: center;
-    }
-    .button:active {
-    background-color: #d9063e;
-    border-color: #d9063e;
-    }
-    .button { 
-    -webkit-user-select: none; 
-    -moz-user-select: none; 
-    -ms-user-select: none; 
-    user-select: none; 
-    background-color: #f8104d;
-    border-radius: 3px;
-    border-color: #f8104d;
-    color: white; 
-    padding: 12px 28px; 
-    text-decoration: none; 
-    font-size: 26px; 
-    margin: 1px; 
-    cursor: pointer;
-    }
-</style>
-
-</head>
-  <body onmouseup="clearMove()" ontouchend="clearMove()">
-    <button class="button" onmousedown="moveForward()" id="forward">FORWARD</button></p>
+  <head>
+    <title>RC Car</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      html {
+        background-color: #281f55;
+        font-family: Roboto, Arial, Helvetica, Helvetica Neue, FreeSans,
+          sans-serif;
+        display: inline-block;
+        margin: 0px auto;
+        text-align: center;
+      }
+      .button:active {
+        background-color: #d9063e;
+        border-color: #d9063e;
+      }
+      .button {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        background-color: #f8104d;
+        border-radius: 3px;
+        border-color: #f8104d;
+        color: white;
+        padding: 12px 28px;
+        text-decoration: none;
+        font-size: 26px;
+        margin: 1px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <button class="button" id="forward">FORWARD</button>
     <div style="clear: both;">
-    <p>
-    <button class="button" onmousedown="moveLeft()" ontouchstart="moveLeft()" id="left">LEFT </button>
-    <button class="button" onmousedown="moveBack()" ontouchstart="moveBack()" id="back">BACK</button>
-    <button class="button" onmousedown="moveRight()" ontouchstart="moveRight()" id="right">RIGHT</button>
-    </p>
-    <button onmousedown="repl()" ontouchstart="repl()" id="Repl">Repl</button>
+      <p>
+        <button class="button" id="left">LEFT</button>
+        <button class="button" id="back">BACK</button>
+        <button class="button" id="right">RIGHT</button>
+      </p>
+      <button id="Repl">Repl</button>
     </div>
 
     <script>
-    var d = "";
-    
-    function throttle(func, wait = 100) {
-      let timer = null;
-      return function(...args) {
-        if (timer === null) {
-          timer = setTimeout(() => {
-            func.apply(this, args);
-            timer = null;
-          }, wait);
-        }
-      };
-    }
-    
-    var myFunction = throttle(baseMyFunction, 50);
+      var p = 0;
+      var d = 0;
 
-    function moveForward(){d = "forward"; myFunction()}
-    function moveBack(){d = "back"; myFunction()}
-    function moveLeft(){d = "left"; myFunction()}
-    function moveRight(){d = "right"; myFunction()}
-    function repl(){d = "repl"; myFunction()}
-
-    function clearMove(){
-        d = "";
-        console.log('stop');
-        var xmlhttp=new XMLHttpRequest();
-        xmlhttp.open("POST","Val=stopX",true);
-        xmlhttp.send();
-        }
-
-    function baseMyFunction(){
-        if (d) {
-            console.log(d);
-            var xmlhttp=new XMLHttpRequest();
-            xmlhttp.open("POST","Val="+d+"X",true);
-            xmlhttp.send();
+      // Returns a function, that, when invoked, will only be triggered at most once
+      // during a given window of time. Normally, the throttled function will run
+      // as much as it can, without ever going more than once per `wait` duration;
+      // but if you'd like to disable the execution on the leading edge, pass
+      // `{leading: false}`. To disable execution on the trailing edge, ditto.
+      function throttle(func, wait, options) {
+        var context, args, result;
+        var timeout = null;
+        var previous = 0;
+        if (!options) options = {};
+        var later = function() {
+          previous = options.leading === false ? 0 : Date.now();
+          timeout = null;
+          result = func.apply(context, args);
+          if (!timeout) context = args = null;
+        };
+        return function() {
+          var now = Date.now();
+          if (!previous && options.leading === false) previous = now;
+          var remaining = wait - (now - previous);
+          context = this;
+          args = arguments;
+          if (remaining <= 0 || remaining > wait) {
+            if (timeout) {
+              clearTimeout(timeout);
+              timeout = null;
             }
-        }
-        
-    document.addEventListener('keydown', function(event) {
-        switch(event.code) {
-            case 'ArrowUp':
-                moveForward();
-                break;
-            case 'ArrowDown':
-                moveBack();
-                break;
-            case 'ArrowLeft':
-                moveLeft();
-                break;
-            case 'ArrowRight':
-                moveRight();
-                break;
-        }
-    });
-    
-    document.addEventListener('keyup', function(event) {
-        if (event.code == 'ArrowUp' || event.code == 'ArrowDown' || event.code == 'ArrowLeft' || event.code == 'ArrowRight') {
-            clearMove()
-        }
-    });
-    
+            previous = now;
+            result = func.apply(context, args);
+            if (!timeout) context = args = null;
+          } else if (!timeout && options.trailing !== false) {
+            timeout = setTimeout(later, remaining);
+          }
+          return result;
+        };
+      }
 
+      var sendRequestThrottled = throttle(sendRequest, 30);
+
+      function moveForward() {
+        p = 100;
+      }
+      function moveBack() {
+        p = -100;
+      }
+      function moveLeft() {
+        d = -1;
+      }
+      function moveRight() {
+        d = 1;
+      }
+
+      function repl() {}
+
+      function clearPower() {
+        p = 0;
+      }
+      function clearDirection() {
+        d = 0;
+      }
+
+      function sendRequest() {
+        console.log("Power:", p, "Direction:", d);
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("POST", "", true);
+        xmlhttp.send(`#${p}~${d}$`);
+      }
+
+      const forwardElement = document.getElementById("forward");
+      const leftElement = document.getElementById("left");
+      const rightElement = document.getElementById("right");
+      const backElement = document.getElementById("back");
+
+      forwardElement.addEventListener("mousedown", moveForward);
+      forwardElement.addEventListener("touchstart", moveForward);
+
+      leftElement.addEventListener("mousedown", moveLeft);
+      leftElement.addEventListener("touchstart", moveLeft);
+
+      rightElement.addEventListener("mousedown", moveRight);
+      rightElement.addEventListener("touchstart", moveRight);
+
+      backElement.addEventListener("mousedown", moveBack);
+      backElement.addEventListener("touchstart", moveBack);
+
+      forwardElement.addEventListener("mouseup", clearPower);
+      forwardElement.addEventListener("touchend", clearPower);
+
+      leftElement.addEventListener("mouseup", clearDirection);
+      leftElement.addEventListener("touchend", clearDirection);
+
+      rightElement.addEventListener("mouseup", clearDirection);
+      rightElement.addEventListener("touchend", clearDirection);
+
+      backElement.addEventListener("mouseup", clearPower);
+      backElement.addEventListener("touchend", clearPower);
+
+      document.addEventListener("keydown", function(event) {
+        switch (event.code) {
+          case "ArrowUp":
+            moveForward();
+            break;
+          case "ArrowDown":
+            moveBack();
+            break;
+          case "ArrowLeft":
+            moveLeft();
+            break;
+          case "ArrowRight":
+            moveRight();
+            break;
+        }
+      });
+
+      document.addEventListener("keyup", function(event) {
+        if (event.code == "ArrowUp" || event.code == "ArrowDown") {
+          clearPower();
+        } else if (event.code == "ArrowLeft" || event.code == "ArrowRight") {
+          clearDirection();
+        }
+      });
+
+      let intervalId = 0;
+
+      function start(t = 30) {
+        if (!intervalId) {
+          intervalId = setInterval(sendRequest, t);
+        }
+      }
+
+      function stop() {
+        if (intervalId) {
+          clearInterval(intervalId);
+          intervalId = 0;
+        }
+      }
+
+      start();
     </script>
   </body>
 </html>
