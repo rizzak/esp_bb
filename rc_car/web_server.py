@@ -1,4 +1,3 @@
-import sys
 import socket
 from motor import Motor
 from time import time
